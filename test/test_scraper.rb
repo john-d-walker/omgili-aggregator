@@ -8,15 +8,16 @@ class TestScraper < Minitest::Test
     @scraper = Scraper.new
   end
 
-  def test_that_zip_file_names_are_valid
+  def test_that_zip_file_links_are_valid
     @scraper.scrape.each do |data|
-      assert_equal true, data.name =~ %r/\d+.zip/
+      assert_equal 0,
+        data.link =~ /http:\/\/feed.omgili.com\/5Rh5AMTrc4Pv\/mainstream\/posts\/\d+.zip/
     end
   end
 
   def test_that_zip_file_sizes_are_floats
     @scraper.scrape.each do |data|
-      assert_equal 'Float', data.size.class
+      assert_equal 1.1.class, data.size.class
     end
   end
 end
