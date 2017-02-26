@@ -10,22 +10,20 @@ class TestDownloadManager < Minitest::Test
     @download_manager = DownloadManager.new
     @download_manager.add_observer(self)
     @updated = false
-    @download_link = "http://feed.omgili.com/5Rh5AMTrc4Pv/mainstream/posts/1487883571566.zip"
+    # This link may expire in the future.
+    @download_link = "http://feed.omgili.com/5Rh5AMTrc4Pv/mainstream/posts/1488148424743.zip"
     @save_path = "test/files/"
   end
 
   def update(download_path)
     puts 'Receiving update.'
+    puts download_path
     @updated = true
-  end
-
-  def test_that_observer_was_added
-    assert_equal 1, @download_manager.count_observers
   end
 
   def test_that_file_is_downloaded
     @download_manager.download(@save_path, [@download_link])
-    assert_equal true, File.exists?(@save_path + "1487883571566.zip")
+    assert_equal true, File.exists?(@save_path + File.basename(@download_link))
   end
 
   def test_that_observer_was_notified
