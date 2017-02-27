@@ -8,12 +8,12 @@ class RedisPusher
     @redis = Redis.new
   end
 
-  def single_push(element, list_name)
+  def push(element, list_name)
+    if (element.nil? || list_name.nil?)
+      return nil
+    end
 
-  end
-
-  def pipeline_push(elements, list_name)
-
+    @redis.rpush(list_name, element)
   end
 end
 
