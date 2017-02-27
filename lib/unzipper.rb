@@ -17,5 +17,14 @@ class Unzipper
     changed
     notify_observers(xml_paths)
   end
+
+  # extracts files to a new directory named after the zip
+  def update(zip_path)
+    extract_path = zip_path.chomp(".zip") + "/"
+    unless File.exists?(extract_path)
+      Dir.mkdir(extract_path)
+    end
+    unzip(zip_path, extract_path)
+  end
 end
 
