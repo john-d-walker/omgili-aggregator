@@ -9,6 +9,7 @@ class TestUnzipper < Minitest::Test
 
   def setup
     @unzipper = Unzipper.new
+    @unzipper.add_observer(self)
     @zip_contents_test = ["e5ca1c48d6cc9a75ea4d4c40c1a0bd48.xml",
                           "5ec79692aa762e6e8375f497b63050df.xml",
                           "3750a18acfdf7fbca340ad3803782a49.xml",
@@ -26,15 +27,19 @@ class TestUnzipper < Minitest::Test
 
   def update(paths)
     puts 'Receiving update.'
-    puts paths
+#    puts paths
     @unzipped_paths = paths
     @updated = true
   end
 
   def test_that_unzipped_contents_are_correct
     @unzipper.unzip(@zip_path_test, @save_path)
-    @unzipped_paths.each do |item|
-      assert_equal true, @zip_contents_test.include?(File.basename(item))
+    @zip_contents_test.each do |item|
+      assert_equal true, @unzipped_paths.include?(@save_path + item)
+    end
+    # reset
+    @unzipped_paths.each do |xml_file|
+      File.delete(xml_file)
     end
   end
 end
