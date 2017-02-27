@@ -3,17 +3,25 @@
 require 'redis'
 
 class RedisPusher
-  attr_reader :redis
-  def initialize
+  attr_reader :redis, :list_name
+
+  def initialize(list_name)
     @redis = Redis.new
+    @list_name = list_name
   end
 
-  def push(element, list_name)
-    if (element.nil? || list_name.nil?)
+  def push(element)
+    if (element.nil?)
       return nil
     end
 
-    @redis.rpush(list_name, element)
+    puts 'pushing' ######################################
+
+    @redis.rpush(@list_name, element)
+  end
+
+  def update(element)
+    push(element)
   end
 end
 

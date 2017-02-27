@@ -21,5 +21,10 @@ class TestOmgiliAggregator < Minitest::Test
     assert_equal [],
       @omgili_aggregator.generate_download_list(@old_links, @old_links)
   end
+
+  def test_that_array_is_split_into_four_parts
+    assert_equal [['a'], ['b'], ['c'], ['d']],
+      @omgili_aggregator.split_download_list(@new_links)
+  end
 end
 

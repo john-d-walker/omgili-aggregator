@@ -26,6 +26,9 @@ class CSVTool
     CSV.open(path, 'a') do |file|
       file << array
     end
+
+    puts 'written' ##############################################
+
     return true
   end
 end

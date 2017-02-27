@@ -20,6 +20,8 @@ class Scraper
       zip_data.push(ZipData.new(FEED_URL + row.css('a').text,
                                 row.css('td')[2].text[0...-1].to_f))
     end
+    
+    puts 'scraped' ##########################################################
 
     return zip_data
   end

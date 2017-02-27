@@ -6,19 +6,35 @@ require 'observer'
 class Unzipper
   include Observable
 
+  # Returns the extracted contents in an array.
   def unzip(zip_path, save_path)
-    xml_paths = Array.new
+    extracted_files = Array.new
+    files_to_delete = Array.new
+
     Zip::File.open(zip_path) do |zip_file|
-      zip_file.each do |xml_file|
-        zip_file.extract(xml_file, "#{save_path}#{xml_file}")
-        xml_paths.push(save_path + "#{xml_file}")
+      zip_file.each do |file|
+        full_path = "#{save_path}#{file}"
+        files_to_delete.push(full_path)
+        zip_file.extract(file, full_path)
+        extracted_files.push(File.open(full_path, "rb").read)
       end
     end
+
+    # Now that zip contents are in memory, delete files stored on hard drive.
+    files_to_delete.each do |file|
+      File.delete(file)
+    end
+
+    Dir.rmdir(save_path)
+    File.delete("#{save_path[0...-1]}.zip")
+
+    puts 'unzipped' ###########################################
+
     changed
-    notify_observers(xml_paths)
+    notify_observers(extracted_files)
   end
 
-  # extracts files to a new directory named after the zip
+  # Extracts files to a new directory named after the zip.
   def update(zip_path)
     extract_path = zip_path.chomp(".zip") + "/"
     unless File.exists?(extract_path)
