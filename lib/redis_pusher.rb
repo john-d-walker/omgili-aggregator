@@ -1,8 +1,11 @@
 # redis_pusher.rb
 
 require 'redis'
+require 'observer'
 
 class RedisPusher
+  include Observable
+
   attr_reader :redis, :list_name
 
   def initialize(list_name)
@@ -16,6 +19,9 @@ class RedisPusher
     end
 
     @redis.rpush(@list_name, element)
+
+    changed
+    notify_observers(element.size)
   end
 
   def update(element)
