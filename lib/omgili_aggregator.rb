@@ -1,20 +1,20 @@
 # omgili_aggregator.rb
 
 require_relative 'scraper'
-require_relative 'csv_tool'
+require_relative 'easy_csv'
 require_relative 'download_manager'
 require_relative 'unzipper'
 require_relative 'redis_pusher'
 
 class OmgiliAggregator
-  attr_reader :previous_downloads_csv, :csv_tool, :temp_path, 
+  attr_reader :previous_downloads_csv, :easy_csv, :temp_path, 
     :download_manager, :unzipper, :redis_pusher, :redis_list_name,
     :download_count, :mb_count, :download_list_size, :download_total_mb,
     :xml_pushed_count
 
   def initialize
     @previous_downloads_csv = "previous_downloads.csv"
-    @csv_tool = CSVTool.new
+    @easy_csv = EasyCsv.new
     @temp_path = "temp/"
     @download_manager = DownloadManager.new
     @unzipper = Unzipper.new
@@ -74,13 +74,13 @@ class OmgiliAggregator
 
   # Keeps track of what has been downloaded.
   def update(downloaded_file_path, item)
-    @csv_tool.write(@previous_downloads_csv, [File.basename(downloaded_file_path)])
+    @easy_csv.write(@previous_downloads_csv, [File.basename(downloaded_file_path)])
     @download_count += 1
     @mb_count += item.size
-    output_status(item)
+    output_status
   end
 
-  def output_status(item)
+  def output_status
     percent = (@download_count.to_f / @download_list_size.to_f * 100.0).round
     end_line = (@download_count == @download_list_size ? "\n" : "\r")
     print "Progress: #{@download_count}/#{@download_list_size} files | "
@@ -106,7 +106,7 @@ class OmgiliAggregator
 
     scrape_results = Scraper.new.scrape
 
-    previous_downloads = @csv_tool.read(@previous_downloads_csv)
+    previous_downloads = @easy_csv.read(@previous_downloads_csv)
 
     files_to_download = Array.new
     if previous_downloads.nil?

@@ -1,8 +1,8 @@
-# csv_tool.rb
+# easy_csv.rb
 
 require 'csv'
 
-class CSVTool
+class EasyCsv
   # Returns csv file contents in a string array, or nil if file does not exist.
   def read(path)
     if File.exists?(path)
