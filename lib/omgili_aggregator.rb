@@ -8,7 +8,8 @@ require_relative 'redis_pusher'
 
 class OmgiliAggregator
   attr_reader :previous_downloads_csv, :csv_tool, :temp_path, 
-    :download_manager, :unzipper, :redis_pusher, :redis_list_name
+    :download_manager, :unzipper, :redis_pusher, :redis_list_name,
+    :download_count, :mb_count, :download_list_size, :download_total_mb
 
   def initialize
     @previous_downloads_csv = "previous_downloads.csv"
@@ -22,6 +23,11 @@ class OmgiliAggregator
     @download_manager.add_observer(@unzipper)
     @download_manager.add_observer(self)
     @unzipper.add_observer(@redis_pusher)
+
+    @download_count = 0
+    @mb_count = 0.0
+    @download_list_size = 0
+    @download_total_mb = 0.0
   end
 
   def generate_download_list(csv_data, scrape_data)
@@ -58,26 +64,39 @@ class OmgiliAggregator
   end
 
   # Splits the list into parts to be divided among threads.
-  def split_download_list(files_to_download)
-    split_size = (files_to_download.length/2.0).ceil
+  def split_download_list(files_to_download, num)
+    split_size = (files_to_download.length/num.to_f).ceil
     return files_to_download.each_slice(split_size).to_a
   end
 
-  # Keeps track of downloaded files.
-  def update(downloaded_file_path)
+  # Keeps track of what has been downloaded.
+  def update(downloaded_file_path, item)
     @csv_tool.write(@previous_downloads_csv, [File.basename(downloaded_file_path)])
+    @download_count += 1
+    @mb_count += item.size
+    output_status(item)
+  end
+
+  def output_status(item)
+    percent = (@download_count.to_f / @download_list_size.to_f * 100.0).round
+    end_line = (percent == 100 ? "\n" : "\r")
+    print "Progress: #{@download_count}/#{@download_list_size} files | "
+    print "#{@mb_count.round}MB/#{@download_total_mb.round}MB | "
+    print "#{percent}%#{end_line}"
   end
 
   # The procedure:
   # - Scrape links from omgili
   # - Load record of previous downloads to avoid duplicates
   # - Generate a list of new links to download
-  # - Split download list into four parts
+  # - Split download list into parts
   # - Start four threads to download files simultaneously
   # - After each download, send zip to have contents extracted
   # - Push new content to redis list
   # - Make a record of the zip that was downloaded for future executions
   def run
+    puts 'omgili-aggregator v0.1 - by John Walker'
+
     scrape_results = Scraper.new.scrape
 
     previous_downloads = @csv_tool.read(@previous_downloads_csv)
@@ -96,12 +115,17 @@ class OmgiliAggregator
     end
 
     unless (ARGV[0].nil?)
-      puts 'limiting download size'
+      puts "Limiting download size to #{ARGV[0]}MB."
       files_to_download = limit_download_size(ARGV[0], files_to_download)
-      puts files_to_download
     end
 
-    download_groups = split_download_list(files_to_download)
+    @download_list_size = files_to_download.size
+    files_to_download.each do |file|
+      @download_total_mb += file.size
+    end
+    print "Progress: initializing...\r"
+
+    download_groups = split_download_list(files_to_download, 2)
 
     threads = []
     (0..(download_groups.length - 1)).each do |i|

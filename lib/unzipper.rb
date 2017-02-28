@@ -28,14 +28,12 @@ class Unzipper
     Dir.rmdir(save_path)
     File.delete("#{save_path[0...-1]}.zip")
 
-    puts 'unzipped' ###########################################
-
     changed
     notify_observers(extracted_files)
   end
 
   # Extracts files to a new directory named after the zip.
-  def update(zip_path)
+  def update(zip_path, item)
     extract_path = zip_path.chomp(".zip") + "/"
     unless File.exists?(extract_path)
       Dir.mkdir(extract_path)

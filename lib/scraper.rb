@@ -21,8 +21,6 @@ class Scraper
                                 row.css('td')[2].text[0...-1].to_f))
     end
     
-    puts 'scraped' ##########################################################
-
     return zip_data
   end
 end

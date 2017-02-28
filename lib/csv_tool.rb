@@ -27,8 +27,6 @@ class CSVTool
       file << array
     end
 
-    puts 'written' ##############################################
-
     return true
   end
 end

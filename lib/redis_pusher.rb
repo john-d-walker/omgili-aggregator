@@ -15,8 +15,6 @@ class RedisPusher
       return nil
     end
 
-    puts 'pushing' ######################################
-
     @redis.rpush(@list_name, element)
   end
 
