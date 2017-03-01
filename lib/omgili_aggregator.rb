@@ -104,7 +104,7 @@ download_manager.add_observer(progress_publisher)
 unzipper.add_observer(redis_pusher)
 redis_pusher.add_observer(progress_publisher, :update_from_redis_pusher)
 
-download_groups = split_download_list(files_to_download, 1)
+download_groups = split_download_list(files_to_download, 2)
 
 threads = []
 (0..(download_groups.length - 1)).each do |i|
