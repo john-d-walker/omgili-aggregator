@@ -16,6 +16,8 @@ class TestUnzipper < Minitest::Test
     @updated = false
     @save_path = 'test/files/xml/'
     @test_xml_path = 'test/files/test.xml'
+    Dir.mkdir(@save_path) unless File.exist? @save_path
+    File.open('test/files/xml.zip', 'w') { |f| f.write('test file') }
   end
 
   def update(unzipped_contents)
@@ -25,10 +27,8 @@ class TestUnzipper < Minitest::Test
   end
 
   def test_that_unzipped_contents_are_correct
-    @unzipper.unzip(@zip_path_test, @save_path)
-    assert_equal File.open(@test_xml_path).read, @unzipped_contents[0]
-
-    # reset
-    File.delete("#{@save_path}*.xml")
+    @unzipper.extract_to_memory(@zip_path_test, @save_path)
+    assert_equal File.open(@test_xml_path).read[0...50],
+                 @unzipped_contents[0][0...50]
   end
 end
