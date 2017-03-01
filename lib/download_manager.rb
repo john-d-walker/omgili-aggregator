@@ -3,6 +3,7 @@
 require 'observer'
 require 'net/http'
 
+# Downloads items in a list one at a time.
 class DownloadManager
   include Observable
 
@@ -17,4 +18,3 @@ class DownloadManager
     end
   end
 end
-

@@ -3,6 +3,7 @@
 require 'redis'
 require 'observer'
 
+# Pushes data to a Redis list.
 class RedisPusher
   include Observable
 
@@ -14,9 +15,7 @@ class RedisPusher
   end
 
   def push(element)
-    if (element.nil?)
-      return nil
-    end
+    return nil if element.nil?
 
     @redis.rpush(@list_name, element)
 
@@ -28,4 +27,3 @@ class RedisPusher
     push(element)
   end
 end
-

@@ -3,33 +3,31 @@
 require 'minitest/autorun'
 require_relative '../lib/easy_csv.rb'
 
-class TestEasyCsv < Minitest::Test
+# Test cases for the EasyCSV class.
+class TestEasyCSV < Minitest::Test
   attr_reader :easy_csv, :read_contents_test_array
 
   def setup
-    @easy_csv = EasyCsv.new
-    @read_contents_test_array = ["1487807963738.zip",
-                                 "1487808083762.zip",
-                                 "1487808230988.zip",
-                                 "1487808401176.zip",
-                                 "1487808621686.zip",
-                                 "1487808834319.zip",
-                                 "1487808843365.zip",
-                                 "1487808855456.zip",
-                                 "1487809006694.zip",
-                                 "1487809228664.zip",
-                                 "1487809380526.zip"]
-
+    @easy_csv = EasyCSV.new('')
+    @read_contents_test_array = ['1487807963738.zip',
+                                 '1487808083762.zip',
+                                 '1487808230988.zip',
+                                 '1487808401176.zip',
+                                 '1487808621686.zip',
+                                 '1487808834319.zip',
+                                 '1487808843365.zip',
+                                 '1487808855456.zip',
+                                 '1487809006694.zip']
   end
 
   def test_that_read_contents_are_correct
-    @easy_csv.read("test/files/test.csv").each do |item|
+    @easy_csv.read('test/files/test.csv').each do |item|
       assert_equal true, @read_contents_test_array.include?(item)
     end
   end
 
   def test_read_returns_nil_when_path_invalid
-    assert_equal nil, @easy_csv.read("test/files/test.exe")
+    assert_equal nil, @easy_csv.read('test/files/test.exe')
   end
 
   def test_write_returns_nil_when_path_is_nil
@@ -37,11 +35,11 @@ class TestEasyCsv < Minitest::Test
   end
 
   def test_write_returns_nil_when_array_is_nil
-    assert_equal nil, @easy_csv.write("test/files/write_test.csv", nil)
+    assert_equal nil, @easy_csv.write('test/files/write_test.csv', nil)
   end
 
   def test_write_file_contents_are_correct
-    write_path = "test/files/write_test.csv"
+    write_path = 'test/files/write_test.csv'
     @easy_csv.write(write_path, @read_contents_test_array)
     @easy_csv.read(write_path).each do |item|
       assert_equal true, @read_contents_test_array.include?(item)
@@ -49,4 +47,3 @@ class TestEasyCsv < Minitest::Test
     File.delete(write_path)
   end
 end
-
