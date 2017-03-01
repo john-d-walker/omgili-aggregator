@@ -10,14 +10,25 @@ class RedisPusher
   attr_reader :redis, :list_name
 
   def initialize(list_name)
-    @redis = Redis.new
     @list_name = list_name
+    @redis = Redis.new
+    @redis.ping
+  rescue StandardError => e
+    e.message
+    puts 'Please troubleshoot the Redis server connection and try again.'
+    abort
   end
 
   def push(element)
     return nil if element.nil?
 
-    @redis.rpush(@list_name, element)
+    begin
+      @redis.rpush(@list_name, element)
+    rescue StandardError => e
+      e.message
+      puts 'Please troubleshoot the Redis server problem and try again.'
+      abort
+    end
 
     changed
     notify_observers(element.size)

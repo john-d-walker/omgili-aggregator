@@ -8,19 +8,25 @@ class Unzipper
   include Observable
 
   # Returns the extracted contents in an array.
-  def unzip(zip_path, save_path)
+  def extract_to_memory(zip_path, save_path)
     files_to_delete = []
     extracted_files = []
 
     Zip::File.open(zip_path) do |zip_file|
       zip_file.each do |file|
         files_to_delete.push("#{save_path}#{file}")
-        zip_file.extract(file, "#{save_path}#{file}")
+        extract_to_file(zip_file, file, "#{save_path}#{file}")
         extracted_files.push(File.open("#{save_path}#{file}", 'rb').read)
       end
     end
 
     delete_old_files(save_path, files_to_delete, extracted_files)
+  end
+
+  def extract_to_file(zip_file, content, save_path)
+    zip_file.extract(content, save_path)
+  rescue StandardError => e
+    puts e.message
   end
 
   def delete_old_files(save_path, files_to_delete, extracted_files)
@@ -42,6 +48,6 @@ class Unzipper
 
     Dir.mkdir(extract_path) unless File.exist?(extract_path)
 
-    unzip(zip_path, extract_path)
+    extract_to_memory(zip_path, extract_path)
   end
 end
