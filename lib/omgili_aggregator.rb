@@ -50,6 +50,20 @@ def split_download_list(files_to_download, num)
   files_to_download.each_slice(split_size).to_a
 end
 
+# Recursive method to clean all files and directories in the path.
+def cleanup_folder(path)
+  Dir.entries(path).select do |f|
+    unless f == '.' || f == '..'
+      if File.directory? File.join(path, f)
+        cleanup_folder(File.join(path, f))
+        Dir.rmdir(File.join(path, f))
+      else
+        File.delete(File.join(path, f))
+      end
+    end
+  end
+end
+
 # The procedure:
 # - Scrape links from omgili
 # - Load record of previous downloads to avoid duplicates
@@ -59,6 +73,7 @@ end
 # - After each download, send zip to have contents extracted
 # - Push new content to redis list
 # - Make a record of the zip that was downloaded for future executions
+
 previous_downloads_csv = 'previous_downloads.csv'
 temp_path = 'temp/'
 redis_list = 'NEWS_XML'
@@ -68,6 +83,8 @@ easy_csv = EasyCSV.new(previous_downloads_csv)
 redis_pusher = RedisPusher.new(redis_list)
 
 puts 'omgili-aggregator v0.1 - by John Walker'
+
+cleanup_folder(temp_path)
 
 scrape_results = Scraper.new.scrape
 
