@@ -1,5 +1,7 @@
 # test_easy_csv.rb
 
+require 'rubygems'
+require 'bundler/setup'
 require 'minitest/autorun'
 require_relative '../lib/easy_csv.rb'
 

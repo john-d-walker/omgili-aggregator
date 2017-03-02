@@ -1,5 +1,7 @@
 # test_redis_pusher.rb
 
+require 'rubygems'
+require 'bundler/setup'
 require 'minitest/autorun'
 require 'redis'
 require_relative '../lib/redis_pusher.rb'

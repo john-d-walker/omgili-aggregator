@@ -1,5 +1,7 @@
 # test_unzipper.rb
 
+require 'rubygems'
+require 'bundler/setup'
 require 'minitest/autorun'
 require_relative '../lib/unzipper.rb'
 

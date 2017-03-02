@@ -1,5 +1,7 @@
 # test_download_manager.rb
 
+require 'rubygems'
+require 'bundler/setup'
 require 'minitest/autorun'
 require_relative '../lib/download_manager.rb'
 require_relative '../lib/scraper.rb'
