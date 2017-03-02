@@ -29,15 +29,15 @@ class TestEasyCSV < Minitest::Test
   end
 
   def test_read_returns_nil_when_path_invalid
-    assert_equal nil, @easy_csv.read('test/files/test.exe')
+    assert_nil @easy_csv.read('test/files/test.exe')
   end
 
   def test_write_returns_nil_when_path_is_nil
-    assert_equal nil, @easy_csv.write(nil, @read_contents_test_array)
+    assert_nil @easy_csv.write(nil, @read_contents_test_array)
   end
 
   def test_write_returns_nil_when_array_is_nil
-    assert_equal nil, @easy_csv.write('test/files/write_test.csv', nil)
+    assert_nil @easy_csv.write('test/files/write_test.csv', nil)
   end
 
   def test_write_file_contents_are_correct
