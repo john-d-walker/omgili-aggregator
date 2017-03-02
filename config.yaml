@@ -1,0 +1,26 @@
+---
+# Redis server connection settings
+host: "127.0.0.1"
+port: 6379
+db: 1
+require_pass: false
+
+# Threads
+# Specify the number of concurrent threads to run. The higher the
+# number, the more files will be downloaded and processed at the
+# same time, but will use more system resources. A good rule of 
+# thumb is to set this value equal to the number of available 
+# processor cores.
+threads: 2
+
+# Download limit
+# A Redis dataset must not exceed the amount of available RAM.
+# If you are working with limited resources, it would be necessary
+# to set a download size limit to prevent Omg-Agg from overloading
+# the server. feed.omgili.com has roughly 15GB of compressed data
+# available at any one time, which translates to ~37.5GB (250%)
+# uncompressed. If you don't have that much RAM, set a download
+# limit here, in megabytes.
+# Use this algorithm to help: (Available_RAM / 2.5)
+download_limit: 1024
+...
