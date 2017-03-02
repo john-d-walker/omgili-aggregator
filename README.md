@@ -28,14 +28,14 @@
 
 <h2>Testing</h2>
 
-<p>This library is tested using Minitest. All tests can be run simultaneously from the 'omgili-aggregator' directory by running the following command:</p>
+<p>This library is tested using <a href="https://github.com/seattlerb/minitest">Minitest</a>. All tests can be run simultaneously from the 'omgili-aggregator' directory by running the following command:</p>
 <pre><code>rake</code></pre>
 
 <h2>Code Consistency (linting) and Code Complexity (ABC)</h2>
 
-<p>All ruby scripts were analyzed and determined to have no offenses by Rubocop, which enforces many of the guidelines outlined in the community Ruby Style Guide, as well as calculates ABC metrics.</p>
+<p>All ruby scripts were analyzed and determined to have no offenses by <a href="https://github.com/bbatsov/rubocop">Rubocop</a>, which enforces many of the guidelines outlined in the <a href="https://github.com/bbatsov/ruby-style-guide">community Ruby Style Guide</a>, as well as calculates ABC metrics.</p>
 
 <h2>Contributors</h2>
 <ul>
-<li>John Walker<li>
+<li>John Walker</li>
 </ul>
