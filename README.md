@@ -1,6 +1,10 @@
 # omgili-aggregator
 <p>Aggregates news data from omgili.com and publishes it to a Redis list.</p>
 
+<h2>How it works</h2>
+
+<p>First, it scans 'feed.omgili.com' for available .zip files to download. Files are downloaded, unzipped, and the contents (news stories in XML format) are pushed to a Redis server list called 'NEWS_XML'. Steps are taken to avoid duplicate data in the server.</p>
+
 <h2>Getting started</h2>
 
 <p>To install omgili-aggregator, navigate to the 'omgili-aggregator' directory and run the following command:</p>
