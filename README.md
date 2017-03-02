@@ -1,7 +1,7 @@
 # omgili-aggregator
-<p>Aggregates news data from omgili.com and publishes it to a Redis list.<p>
+<p>Aggregates news data from omgili.com and publishes it to a Redis list.</p>
 
-<h2>Getting started<h2>
+<h2>Getting started</h2>
 
 <p>To install omgili-aggregator, navigate to the 'omgili-aggregator' directory and run the following command:</p>
 <pre><code>bundle install</code></pre>
