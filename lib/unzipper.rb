@@ -1,5 +1,7 @@
 # unzipper.rb
 
+require 'rubygems'
+require 'bundler/setup'
 require 'zip'
 require 'observer'
 

@@ -1,5 +1,6 @@
 # scraper.rb
 require 'rubygems'
+require 'bundler/setup'
 require 'nokogiri'
 require 'open-uri'
 

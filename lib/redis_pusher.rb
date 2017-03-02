@@ -1,5 +1,7 @@
 # redis_pusher.rb
 
+require 'rubygems'
+require 'bundler/setup'
 require 'redis'
 require 'observer'
 
@@ -15,6 +17,7 @@ class RedisPusher
     @redis.ping
   rescue StandardError => e
     e.message
+    puts 'Cannot connect to Redis server.'
     puts 'Please troubleshoot the Redis server connection and try again.'
     abort
   end
