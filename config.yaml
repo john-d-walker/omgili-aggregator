@@ -1,8 +1,11 @@
 ---
-# Redis server connection settings
+# Redis Server Connection Settings
+# If you need to connect to a remote Redis server, adjust these
+# settings accordingly. If 'require_pass' is set to 'true', you
+# will be prompted for a password at runtime.
 host: "127.0.0.1"
 port: 6379
-db: 1
+db: 0
 require_pass: false
 
 # Threads
@@ -13,14 +16,14 @@ require_pass: false
 # processor cores.
 threads: 2
 
-# Download limit
+# Download Limit
 # A Redis dataset must not exceed the amount of available RAM.
 # If you are working with limited resources, it would be necessary
 # to set a download size limit to prevent Omg-Agg from overloading
 # the server. feed.omgili.com has roughly 15GB of compressed data
 # available at any one time, which translates to ~37.5GB (250%)
 # uncompressed. If you don't have that much RAM, set a download
-# limit here, in megabytes.
+# limit here, in megabytes. If no limit is needed, set to 0.
 # Use this algorithm to help: (Available_RAM / 2.5)
 download_limit: 1024
 ...

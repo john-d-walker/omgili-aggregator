@@ -6,6 +6,7 @@ require_relative 'download_manager'
 require_relative 'unzipper'
 require_relative 'redis_pusher'
 require_relative 'progress_publisher'
+require_relative 'config_parser'
 
 def generate_download_list(csv_data, scrape_data)
   results = []
@@ -65,6 +66,7 @@ def cleanup_folder(path)
 end
 
 # The procedure:
+# - Load config file
 # - Scrape links from omgili
 # - Load record of previous downloads to avoid duplicates
 # - Generate a list of new links to download
@@ -73,6 +75,7 @@ end
 # - After each download, send zip to have contents extracted
 # - Push new content to redis list
 # - Make a record of the zip that was downloaded for future executions
+puts 'omgili-aggregator v0.1 - by John Walker'
 
 previous_downloads_csv = 'previous_downloads.csv'
 temp_path = 'temp/'
@@ -80,9 +83,12 @@ redis_list = 'NEWS_XML'
 download_manager = DownloadManager.new
 unzipper = Unzipper.new
 easy_csv = EasyCSV.new(previous_downloads_csv)
-redis_pusher = RedisPusher.new(redis_list)
-
-puts 'omgili-aggregator v0.1 - by John Walker'
+config = ConfigParser.configure_with('config.yaml')
+redis_pusher = RedisPusher.new(config[:host],
+                               config[:port],
+                               config[:db],
+                               config[:require_pass],
+                               redis_list)
 
 cleanup_folder(temp_path)
 
@@ -104,9 +110,10 @@ if files_to_download.empty?
   abort
 end
 
-unless ARGV[0].nil?
-  puts "Limiting download size to ~#{ARGV[0]}MB."
-  files_to_download = limit_download_size(ARGV[0], files_to_download)
+unless config[:download_limit].zero?
+  puts "Limiting download size to ~#{config[:download_limit]}MB."
+  files_to_download = limit_download_size(config[:download_limit],
+                                          files_to_download)
 end
 
 progress_publisher = ProgressPublisher.new(
@@ -121,7 +128,7 @@ download_manager.add_observer(progress_publisher)
 unzipper.add_observer(redis_pusher)
 redis_pusher.add_observer(progress_publisher, :update_from_redis_pusher)
 
-download_groups = split_download_list(files_to_download, 2)
+download_groups = split_download_list(files_to_download, config[:threads])
 
 threads = []
 (0..(download_groups.length - 1)).each do |i|

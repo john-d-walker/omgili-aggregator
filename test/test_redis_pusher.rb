@@ -8,11 +8,16 @@ require_relative '../lib/redis_pusher.rb'
 
 # Test cases for the RedisPusher class.
 class TestRedisPusher < Minitest::Test
-  attr_reader :redis_pusher, :redis_list_name
+  attr_reader :redis_pusher, :redis_list_name, :connection_settings
 
   def setup
+    @redis_conf = { host: '127.0.0.1', port: 6379, db: 0, require_pass: false }
     @redis_list_name = 'TEST'
-    @redis_pusher = RedisPusher.new(@redis_list_name)
+    @redis_pusher = RedisPusher.new(@redis_conf[:host],
+                                    @redis_conf[:port],
+                                    @redis_conf[:db],
+                                    @redis_conf[:require_pass],
+                                    @redis_list_name)
   end
 
   def test_single_push

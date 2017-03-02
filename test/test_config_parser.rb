@@ -10,7 +10,7 @@ class TestConfigParser < Minitest::Test
   attr_reader :default_config, :test_config
 
   def setup
-    @default_config = { host: '127.0.0.1', port: 6379, db: 1,
+    @default_config = { host: '127.0.0.1', port: 6379, db: 0,
                         require_pass: false, threads: 2, download_limit: 1024 }
 
     @test_config = { host: '10.0.0.1', port: 2345, db: 15,

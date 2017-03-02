@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 source "https://rubygems.org"
 
+gem 'highline', '1.7.8'
 gem 'minitest', '5.10.1'
 gem 'nokogiri', '1.7.0.1'
 gem 'redis', '3.3.3'

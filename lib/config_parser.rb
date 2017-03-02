@@ -8,7 +8,7 @@ module ConfigParser
   @default_config = {
     host: '127.0.0.1',
     port: 6379,
-    db: 1,
+    db: 0,
     require_pass: false,
     threads: 2,
     download_limit: 1024
