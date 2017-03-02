@@ -2,6 +2,7 @@
 
 require 'minitest/autorun'
 require_relative '../lib/download_manager.rb'
+require_relative '../lib/scraper.rb'
 
 # Test cases for the DownloadManager class.
 class TestDownloadManager < Minitest::Test
@@ -12,24 +13,24 @@ class TestDownloadManager < Minitest::Test
     @download_manager.add_observer(self)
     @updated = false
     # This link may expire in the future.
-    @download_link =
-      'http://feed.omgili.com/5Rh5AMTrc4Pv/mainstream/posts/1488148424743.zip'
+    @zip_data = ZipData.new(
+      'http://feed.omgili.com/5Rh5AMTrc4Pv/mainstream/posts/1488148424742.zip',
+      10.0
+    )
     @save_path = 'test/files/'
   end
 
-  def update(download_path)
-    puts 'Receiving update.'
-    puts download_path
+  def update(_save_path, _item)
     @updated = true
   end
 
   def test_that_file_is_downloaded
-    @download_manager.download(@save_path, [@download_link])
-    assert_equal true, File.exist?(@save_path + File.basename(@download_link))
+    @download_manager.download(@save_path, [@zip_data])
+    assert_equal true, File.exist?(@save_path + File.basename(@zip_data.link))
   end
 
   def test_that_observer_was_notified
-    @download_manager.download(@save_path, [@download_link])
+    @download_manager.download(@save_path, [@zip_data])
     assert_equal true, @updated
     # reset
     @updated = false

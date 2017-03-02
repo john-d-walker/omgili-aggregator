@@ -6,7 +6,7 @@ require_relative '../lib/unzipper.rb'
 # Test cases for the Unzipper class.
 class TestUnzipper < Minitest::Test
   attr_reader :unzipper, :zip_contents_test, :zip_path_test, :updated,
-              :save_path, :unzipped_contents, :test_xml_path
+              :save_path, :unzipped_contents, :test_xml_path, :zip_file
 
   def setup
     @unzipper = Unzipper.new
@@ -18,10 +18,10 @@ class TestUnzipper < Minitest::Test
     @test_xml_path = 'test/files/test.xml'
     Dir.mkdir(@save_path) unless File.exist? @save_path
     File.open('test/files/xml.zip', 'w') { |f| f.write('test file') }
+    @zip_file = File.read(@zip_path_test)
   end
 
   def update(unzipped_contents)
-    puts 'Receiving update.'
     @unzipped_contents = unzipped_contents
     @updated = true
   end
@@ -30,5 +30,8 @@ class TestUnzipper < Minitest::Test
     @unzipper.extract_to_memory(@zip_path_test, @save_path)
     assert_equal File.open(@test_xml_path).read[0...50],
                  @unzipped_contents[0][0...50]
+    # reset
+    File.delete(@zip_path_test)
+    File.open(@zip_path_test, 'w') { |f| f.write(@zip_file) }
   end
 end
